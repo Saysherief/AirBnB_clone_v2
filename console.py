@@ -117,42 +117,48 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, args):
         """ Create an object of any class"""
         if not args:
+            print("** class doesn't exist **")
             return
+
         models = HBNBCommand.classes
-        raw_attr = ""
         model = ""
         for md_key, md_val in models.items():
-            if args.startswith(md_key + " "):
+            if args.startswith(md_key):
                 model = md_val
-                args = args[len(md_key) + 1:]
+                args = args[len(md_key):].strip()
         if not model:
             print("** class doesn't exist **")
             return
 
-        pattern = r"(\w+=\"[\w\S]+\"\s?)"
-        args = re.findall(pattern, args.strip())
+        pattern = (
+                r'((\w+=\"[\w\S]+\")|(\w+=[-+]?((0[.][0-9])' +
+                '|[1-9]+[.][0-9]+))|(\w+=[-+]?[1-9][0-9]+))')
+
+        args = (item[0] for item in re.findall(pattern, args.strip()))
 
         attrs = {}
         if args:
             for key_val in args:
                 try:
                     key, val = key_val.split("=")
-
                     if any(len(itm.strip()) == 0 for itm in (key, val)):
                         continue
-                    val = val[1:-1]
-                    val = val.replace("_"," ")
-                    val = val.replace('"',r'\"')
-
-                    for typ in (int, float):
+                    if '"' in val and val[0] != '"' and val[-1] != '"':
+                        continue
+                    elif '"' in val:
+                        val = val[1:-1].strip()  # remove the double quotes
+                        val = val.replace("_", " ")
+                    else:
                         try:
-                            val = typ(val)
-                            break
-                        except Exception:
+                            for typ in (int, float):
+                                val = typ(val)
+                                break
+                        except ValueError:
                             pass
                     attrs[key.strip()] = val
-                except Exception:
+                except ValueError:
                     pass
+
         new_instance = model()
         for new_key, new_val in attrs.items():
             new_instance.__setattr__(

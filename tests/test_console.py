@@ -6,7 +6,6 @@ terminal for various backend activities of the
 AirBnB website
 """
 import os
-import json
 import uuid
 from unittest import TestCase
 from unittest.mock import patch
@@ -52,7 +51,7 @@ class ConsoleTest(TestCase):
             print("[ok]")
 
 
-    def test_do_create(self):
+    def test_invalid_class(self):
         """Test the do_create command
 
         The do_create command is used to create an
@@ -62,22 +61,34 @@ class ConsoleTest(TestCase):
             HBNBCommand().onecmd("create")
             
             # skip if argument is unrecognized
-            self.assertEqual(f.getvalue(),"")
-            
-            HBNBCommand().onecmd('create State name="California"')
-            new_id = f.getvalue();
+            self.assertIn(
+                    "class doesn't exist",
+                    f.getvalue())
 
+    def test_valid_class_one_attribute(self):
+        with patch('sys.stdout', new=StringIO()) as f:
+            HBNBCommand().onecmd('create State name="California"')
+            new_id = f.getvalue().strip();
             HBNBCommand().onecmd("all State")
             response = f.getvalue()
             self.assertIn(new_id, response)
-
+    
+    def test_valid_class_attribute_underscore(self):
+        with patch('sys.stdout', new=StringIO()) as f:
             HBNBCommand().onecmd('create State name="My_house"')
             response2 = f.getvalue().strip()
             HBNBCommand().onecmd("all State")
-            self.assertIn("My house", f.getvalue())
+            self.assertIn("My house", f.getvalue().strip())
 
+    def test_valid_class_multiple_attributes(self):    
+        with patch('sys.stdout', new=StringIO()) as f:    
+            data = (
+                    'create State name="My"house" ' +
+                    'age="35" location_id="00015" ' +
+                    'invalid_name=" This name"'
+                    )
 
-            HBNBCommand().onecmd('create State name="My"house" age="35"')
+            HBNBCommand().onecmd(data)
             HBNBCommand().onecmd("all State")
             result = f.getvalue().strip()
-            self.assertIn("age", result)
+            self.assertNotIn("invalid_name", result)
