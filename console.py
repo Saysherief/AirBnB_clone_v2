@@ -118,31 +118,48 @@ class HBNBCommand(cmd.Cmd):
         """ Create an object of any class"""
         if not args:
             return
+        models = HBNBCommand.classes
+        raw_attr = ""
+        model = ""
+        for md_key, md_val in models.items():
+            if args.startswith(md_key + " "):
+                model = md_val
+                args = args[len(md_key) + 1:]
+        if not model:
+            print("** class doesn't exist **")
+            return
 
-        elif args[0] in HBNBCommand.classes:
-            attrs = {}
-            for key_val in args[1:]:
+        pattern = r"(\w+=\"[\w\S]+\"\s?)"
+        args = re.findall(pattern, args.strip())
+
+        attrs = {}
+        if args:
+            for key_val in args:
                 try:
                     key, val = key_val.split("=")
 
-                    if any(len(itm.trim()) == 0 for itm in (key, val)):
+                    if any(len(itm.strip()) == 0 for itm in (key, val)):
                         continue
-                    for typ in (float, int):
+                    val = val[1:-1]
+                    val = val.replace("_"," ")
+                    val = val.replace('"',r'\"')
+
+                    for typ in (int, float):
                         try:
                             val = typ(val)
                             break
                         except Exception:
                             pass
-                    attrs[key.trim()] = val
+                    attrs[key.strip()] = val
                 except Exception:
                     pass
-            new_instance = HBNBCommand.classes[args[0]](**attrs)
-            storage.save()
-            print(new_instance.id)
-            storage.save()
-        else:
-            print("** class doesn't exist **")
-
+        new_instance = model()
+        for new_key, new_val in attrs.items():
+            new_instance.__setattr__(
+                    new_key,
+                    new_val)
+        storage.save()
+        print(new_instance.id)
 
     def help_create(self):
         """ Help information for the create method """
@@ -337,6 +354,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()

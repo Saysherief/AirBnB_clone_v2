@@ -68,9 +68,16 @@ class ConsoleTest(TestCase):
             new_id = f.getvalue();
 
             HBNBCommand().onecmd("all State")
-            response = f.getvalue();
-            self.assertIn(
-                    response,
-                    new_id
-                    )
+            response = f.getvalue()
+            self.assertIn(new_id, response)
 
+            HBNBCommand().onecmd('create State name="My_house"')
+            response2 = f.getvalue().strip()
+            HBNBCommand().onecmd("all State")
+            self.assertIn("My house", f.getvalue())
+
+
+            HBNBCommand().onecmd('create State name="My"house" age="35"')
+            HBNBCommand().onecmd("all State")
+            result = f.getvalue().strip()
+            self.assertIn("age", result)
