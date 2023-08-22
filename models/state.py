@@ -1,12 +1,10 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
 import os
-from dotenv import load_doten
 from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
 
-load_dotenv()
 is_file = os.getenv("HBNB_TYPE_STORAGE") == 'FileStorage'
 
 
