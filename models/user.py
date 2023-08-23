@@ -8,8 +8,8 @@ if os.getenv('HBNB_TYPE_STORAGE') == 'db':
     from sqlalchemy import Column, String
     from models.base_model import Base
 
-    class User(BaseModel):
-        """This class defines a user by various attributes"""
+    class User(BaseModel, Base):
+        """This class defines a user by various attributes for db"""
         __tablename__ = 'users'
 
         email = Column(String(128), nullable=False)
@@ -18,7 +18,7 @@ if os.getenv('HBNB_TYPE_STORAGE') == 'db':
         last_name = Column(String(128), nullable=True)
 else:
     class User(BaseModel):
-        """This class defines a user by various attributes"""
+        """This class defines a user by various attributes for file"""
         email = ''
         password = ''
         first_name = ''
