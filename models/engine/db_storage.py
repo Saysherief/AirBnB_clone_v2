@@ -35,6 +35,8 @@ class DBStorage:
     __session = None
 
     def __init__(self):
+        """ initialize the instance attributes of the class
+        """
         self.__engine = create_engine(
                 "mysql+mysqldb://{}:{}@{}:3306/{}".format(
                     mysql_user, mysql_user_pwd, mysql_host, mysql_db),
