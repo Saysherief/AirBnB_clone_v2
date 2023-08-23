@@ -117,7 +117,7 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, args):
         """ Create an object of any class"""
         if not args:
-            print("** class doesn't exist **")
+            print("** class name missing **")
             return
 
         models = HBNBCommand.classes
@@ -164,8 +164,8 @@ class HBNBCommand(cmd.Cmd):
             new_instance.__setattr__(
                     new_key,
                     new_val)
-        if is_db:
-            storage.new(new_instance)
+        '''if is_db:'''
+        storage.new(new_instance)
         storage.save()
         print(new_instance.id)
 
@@ -258,8 +258,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             for k, v in storage._FileStorage__objects.items():
                 print_list.append(str(v))
-
-        print(print_list)
+        print('[%s]' % ", ".join(map(str, print_list)))
 
     def help_all(self):
         """ Help information for the all command """
