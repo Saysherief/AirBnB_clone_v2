@@ -23,6 +23,8 @@ class State(BaseModel, Base):
 
         @property
         def cities(self):
+            """ A property that return list of all cities in database
+            """
             return [
                     item['id'] for item in
                     storage.all().values()
