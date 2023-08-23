@@ -250,7 +250,7 @@ class HBNBCommand(cmd.Cmd):
                 print("** class doesn't exist **")
                 return
             if is_db:
-                return print(storage.all(args))
+                return print('[%s]' % ", ".join(map(str, storage.all(args))))
 
             for k, v in storage._FileStorage__objects.items():
                 if k.split('.')[0] == args:
