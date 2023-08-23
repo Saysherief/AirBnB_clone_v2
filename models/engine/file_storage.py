@@ -47,6 +47,6 @@ class FileStorage:
                 if temp is None:
                     temp = {}
                 for key, val in temp.items():
-                        self.all()[key] = classes[val['__class__']](**val)
+                    self.all()[key] = classes[val['__class__']](**val)
         except FileNotFoundError:
             pass

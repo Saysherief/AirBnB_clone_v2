@@ -4,6 +4,7 @@
 This module define a new storage engine 'DBStorage
 """
 import os
+from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm import scoped_session
@@ -57,15 +58,30 @@ class DBStorage:
         all_objects = {}
 
         if cls is not None and cls in cls_map:
-            all_cls = self.__session.query(cls_map[cls])
+            all_cls = self.__session.query(cls_map[cls]).all()
             for item in all_cls:
-                all_objects[f"{cls}.{item.id}"] = item
+                item = item.to_dict()
+                item.pop('__class__')
+                item_id = item.get("id")
+                all_objects[f"{cls}.{item_id}"] = item
+
         elif cls is None:
             for name, obj in cls_map.items():
                 all_cls = self.__session.query(obj)
                 for item in all_cls:
-                    all_objects[f"{name}.{item.id}"] = item
-        return all_objects
+                    item = item.to_dict()
+                    item.pop('__class__')
+                    item_id = item.get("id")
+                    all_objects[f"{cls}.{item_id}"] = item
+
+        to_return = []
+
+        for key, value in all_objects.items():
+            this_class, this_id = key.split(".")
+            value["updated_at"] = datetime.fromisoformat(value["updated_at"])
+            value["created_at"] = datetime.fromisoformat(value["created_at"])
+            to_return.append(f"[{this_class}] ({this_id}) {value}")
+        return to_return
 
     def new(self, cls):
         """Add new object to the current database

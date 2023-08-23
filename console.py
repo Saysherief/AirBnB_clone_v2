@@ -4,7 +4,7 @@ import cmd
 import sys
 import re
 from models.base_model import BaseModel
-from models.__init__ import storage
+from models.__init__ import storage, is_db
 from models.user import User
 from models.place import Place
 from models.state import State
@@ -132,7 +132,7 @@ class HBNBCommand(cmd.Cmd):
 
         pattern = (
                 r'((\w+=\"[\w\S]+\")|(\w+=[-+]?((0[.][0-9])' +
-                '|[1-9]+[.][0-9]+))|(\w+=[-+]?[1-9][0-9]+))')
+                r'|[1-9]+[.][0-9]+))|(\w+=[-+]?[1-9][0-9]+))')
 
         args = (item[0] for item in re.findall(pattern, args.strip()))
 
@@ -164,6 +164,8 @@ class HBNBCommand(cmd.Cmd):
             new_instance.__setattr__(
                     new_key,
                     new_val)
+        if is_db:
+            storage.new(new_instance)
         storage.save()
         print(new_instance.id)
 
@@ -247,6 +249,9 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
+            if is_db:
+                return print(storage.all(args))
+
             for k, v in storage._FileStorage__objects.items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
