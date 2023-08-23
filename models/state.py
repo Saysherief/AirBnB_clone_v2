@@ -14,7 +14,7 @@ class State(BaseModel, Base):
 
     name = Column(String(128), nullable=False)
 
-    if (!is_file):
+    if not is_file:
         cities = relationship
         'City', cascade='all, delete-orphan',
         backref='state')

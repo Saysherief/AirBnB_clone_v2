@@ -6,6 +6,13 @@ This module define a new storage engine 'DBStorage
 import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+from models.user import User
+from models.city import City
+from models.amenity import Amenity
+from models.state import State
+from models.review import Review
+from models.place import Place
+
 
 mysql_user = os.getenv("HBNB_MYSQL_USER")
 mysql_user_pwd = os.getenv("HBNB_MYSQL_PWD")
@@ -36,4 +43,9 @@ class DBStorage:
     def all(self, cls=None):
         """Query the database for all objects
         """
-
+        all_objects = {}
+        cls_map = dict(
+                User=User, State=State, City=City, Amenity=Amenity,
+                Place=Place, Review=Review)
+        if cls is not None and cls in cls_map:
+            
