@@ -12,14 +12,14 @@ class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'
 
-    name = Column(String(128), nullable=False)
-
     if not is_file:
+        name = Column(String(128), nullable=False)
         cities = relationship(
                 'City', cascade='all, delete-orphan',
                 backref='state')
     else:
         from models import storage
+        name = ""
 
         @property
         def cities(self):
