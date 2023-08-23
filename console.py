@@ -131,10 +131,8 @@ class HBNBCommand(cmd.Cmd):
             return
 
         pattern = (
-                r'((\w+=\"[\w\S]+\")|(\w+=[-+]?((0[.][0-9])' +
-                r'|[1-9]+[.][0-9]+))|(\w+=[-+]?[1-9][0-9]+))')
-
-        args = (item[0] for item in re.findall(pattern, args.strip()))
+                r' (\w+)="((?:[^"\\]|\\.)*)"|(\w+)=(-?\d+\.\d+)|(\w+)=(-?\d+)')
+        '''args = (item[0] for item in re.findall(pattern, args.strip()))
 
         attrs = {}
         if args:
@@ -157,7 +155,23 @@ class HBNBCommand(cmd.Cmd):
                             pass
                     attrs[key.strip()] = val
                 except ValueError:
-                    pass
+                    pass'''
+        matches = re.findall(pattern, args)
+        attrs = {}
+        for match in matches:
+            for i in range(len(match)):
+                if match[i]:
+                    key = match[i]
+                    if key == "'_sa_instance_state'":
+                        break
+                    if i + 1 < len(match) and match[i + 1]:
+                        val = match[i + 1]
+                    else:
+                        val = match[i + 2]
+                    if "_" in key:
+                        key = key.replace("_", " ")
+                        attrs[key] = val
+                        break
 
         new_instance = model()
         for new_key, new_val in attrs.items():
