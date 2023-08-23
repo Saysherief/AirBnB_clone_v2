@@ -26,6 +26,7 @@ cls_map = dict(
         User=User, State=State, City=City,
         Amenity=Amenity, Place=Place, Review=Review)
 
+
 class DBStorage:
     """A Relational database storage engine
     """
@@ -45,7 +46,8 @@ class DBStorage:
             metadata = MetaData(bind=self.__engine)
             metadata.reflect()
             for table_name in metadata.tables.keys():
-                session.execute(f'DROP TABLE IF EXISTS {} CASCADE;')
+                session.execute(
+                        'DROP TABLE IF EXISTS {} CASCADE;'.format(table_name))
             session.commit()
             session.close()
 
@@ -61,14 +63,13 @@ class DBStorage:
         elif cls is None:
             for name, obj in cls_map.items():
                 all_cls = self.__session.query(obj)
-                for item in all_cls
-                all_objects[f"{name}.{item.id}"] = item
+                for item in all_cls:
+                    all_objects[f"{name}.{item.id}"] = item
         return all_objects
 
     def new(self, cls):
         """Add new object to the current database
         """
-        
         if type(cls).__name__ in cls_map:
             self.__session.add(cls)
 
@@ -91,10 +92,9 @@ class DBStorage:
         Also creates the current database session
         """
 
-        Base.metadata.create_all(engine))
+        Base.metadata.create_all(self.__engine)
 
         factory_session = sessionmaker(
                 bind=self.__engine,
                 expire_on_commit=False)
-        
         self.__session = scoped_session(factory_session)()

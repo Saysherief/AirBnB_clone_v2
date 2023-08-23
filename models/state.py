@@ -15,14 +15,16 @@ class State(BaseModel, Base):
     name = Column(String(128), nullable=False)
 
     if not is_file:
-        cities = relationship
-        'City', cascade='all, delete-orphan',
-        backref='state')
+        cities = relationship(
+                'City', cascade='all, delete-orphan',
+                backref='state')
     else:
         from models import storage
+
         @property
         def cities(self):
-            return  list(
-                    item['id'] for item in storage.all().values()
-                    if item['__class__'] == 'City'
-                    and item['state_id'] == self.id)
+            return [
+                    item['id'] for item in
+                    storage.all().values()
+                    if item['__class__'] == 'City' and
+                    item['state_id'] == self.id]
