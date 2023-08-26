@@ -7,10 +7,14 @@ if os.getenv('HBNB_TYPE_STORAGE') == 'db':
     import sqlalchemy
     from sqlalchemy import Column, String
     from models.base_model import Base
+    from sqlalchemy.orm import relationship
 
     class User(BaseModel, Base):
         """This class defines a user by various attributes for db"""
         __tablename__ = 'users'
+
+        places = relationship("Place", backref="user",
+                              cascade="all, delete-orphan")
 
         email = Column(String(128), nullable=False)
         password = Column(String(128), nullable=False)

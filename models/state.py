@@ -5,14 +5,15 @@ from sqlalchemy import Column, String, ForeignKey
 from models.base_model import BaseModel, Base
 from sqlalchemy.orm import relationship
 
-is_file = os.getenv("HBNB_TYPE_STORAGE") == 'FileStorage'
+is_db = os.getenv("HBNB_TYPE_STORAGE") == 'db'
 
 
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = 'states'
 
-    if not is_file:
+    if is_db:
+        from models.city import City
         name = Column(String(128), nullable=False)
         cities = relationship(
                 'City', cascade='all, delete-orphan',
