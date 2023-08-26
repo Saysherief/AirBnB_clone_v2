@@ -7,10 +7,14 @@ if getenv('HBNB_TYPE_STORAGE') == 'db':
     import sqlalchemy
     from sqlalchemy import Column, String, Integer, Float, ForeignKey
     from models.base_model import Base
+    from sqlalchemy.orm import relationship
 
     class Place(BaseModel, Base):
         """ A place to stay """
         __tablename__ = 'places'
+
+        reviews = relationship("Review", backref="place",
+                               cascade="all, delete, delete-orphan")
 
         city_id = Column(String(60), ForeignKey('cities.id'), nullable=False)
         user_id = Column(String(60), ForeignKey('users.id'), nullable=False)
@@ -26,6 +30,7 @@ else:
 
     class Place(BaseModel):
         """ A place to stay """
+
         city_id = ""
         user_id = ""
         name = ""
@@ -37,3 +42,15 @@ else:
         latitude = 0.0
         longitude = 0.0
         amenity_ids = []
+
+        @property
+        def reviews(self):
+            """Getter property that returns list of Review instances that
+            show the relationship between Place and Review"""
+            from models import storage
+            rev_list = []
+            all_revs = storage.all(Review)
+            for review in all_revs.values():
+                if review.place_id == self.id:
+                    rev_list.append(review)
+            return rev_list
