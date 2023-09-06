@@ -24,7 +24,20 @@ sudo tee /etc/nginx/sites-enabled/default > /dev/null << EOT
 server {
 	listen 80;
 	server_name _;
-	root /var/www/html;
+	root /var/www/html;	
+	
+	add_header X-Served-By \$HOSTNAME;
+	
+	location /redirect_me {
+		return 301 https://blog.idrisoft.tech;
+	}
+	
+	error_page 404 /custom_404.html;
+	location = /custom_404.html {
+		root /usr/share/nginx/html;
+		internal;
+	}
+
 	
 	location / {
 		try_files \$uri \$uri/ = 404;
