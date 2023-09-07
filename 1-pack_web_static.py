@@ -13,7 +13,7 @@ from pathlib import Path
 def do_pack():
     """Bundles convert the contents of web_static directory to tgz
     """
-    version_dir = Path('./version')
+    version_dir = Path('./versions')
     if not version_dir.exists():
         os.mkdir(version_dir)
     now = datetime.now()
