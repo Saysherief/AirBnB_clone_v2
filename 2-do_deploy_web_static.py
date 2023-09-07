@@ -58,6 +58,5 @@ def do_deploy(archive_path):
         api.run(f'rm -rf {old_path}')
         api.run(f'ln -s {new_path} {curr_path}')
         return True
-    except Exception as e:
-        print(e)
+    except Exception:
         return False
