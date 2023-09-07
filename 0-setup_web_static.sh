@@ -18,7 +18,7 @@ then
 	sudo rm -rf /data/web_static/current
 fi
 
-sudo chown -R "$USER":"$USER" /data/
+sudo chown -R ubuntu:ubuntu /data/
 sudo ln -s /data/web_static/releases/test /data/web_static/current
 sudo tee /etc/nginx/sites-enabled/default > /dev/null << EOT
 
