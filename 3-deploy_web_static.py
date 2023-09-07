@@ -31,7 +31,7 @@ def do_pack():
             now.year, now.month, now.day,
             now.hour, now.minute, now.second)
     try:
-        api.local(f"tar -zcvf {file_name.absolute()} web_static")
+        api.local(f"tar -zcvf {file_name.absolute()} -C web_static .")
         return str(file_name.absolute())
     except Exception:
         return None
@@ -65,7 +65,11 @@ def do_deploy(archive_path):
 def deploy():
     """ Deploy the the archive dynamically
     """
-    archive_path = do_pack()
+    archive_path = os.getenv('archive_path', None)
+    if archive_path is None:
+        archive_path = do_pack()
+        os.environ['archive_path'] = archive_path
+
     if archive_path is None:
         return False
     result = do_deploy(archive_path)
