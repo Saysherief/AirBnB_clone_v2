@@ -15,7 +15,7 @@ if [ -e /data/web_static/current ]
 then
 	sudo rm -rf /data/web_static/current
 fi
-sudo ln -s /data/web_static/releases/test/ /data/web_static/current
+sudo ln -s /data/web_static/releases/test /data/web_static/current
 
 sudo chown -R "$USER":"$USER" /data/
 
