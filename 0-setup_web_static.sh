@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# setup server for static deployment
-
+# setup server for static deployment of the static web clone of the Airbnb
 sudo apt-get update -y
 sudo apt-get install nginx -y
 sudo mkdir -p /data/web_static/{releases,shared}/
