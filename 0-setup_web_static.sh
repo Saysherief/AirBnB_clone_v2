@@ -3,7 +3,7 @@
 
 sudo apt-get update -y
 sudo apt-get install nginx -y
-sudo mkdir -p /data/web_static/{releases,shared}
+sudo mkdir -p /data/web_static/{releases,shared}/
 sudo mkdir -p /data/web_static/releases/test/
 sudo tee /data/web_static/releases/test/index.html > /dev/null <<EOT
 <!Doctype html>
@@ -44,8 +44,8 @@ server {
 	}
 
 
-	location /hbnb_static {
-		alias /data/web_static/current;
+	location /hbnb_static/ {
+		alias /data/web_static/current/;
 	}
 }
 EOT
