@@ -5,9 +5,12 @@ sudo apt-get install nginx -y
 sudo mkdir -p /data/web_static/{releases,shared}/
 sudo mkdir -p /data/web_static/releases/test/
 sudo tee /data/web_static/releases/test/index.html > /dev/null <<EOT
-<!Doctype html>
 <html>
-	<body> It works </body>
+  <head>
+  <head>
+  <body>
+    Holberton School
+  </body>
 </html>
 EOT
 if [ -e /data/web_static/current ] 
