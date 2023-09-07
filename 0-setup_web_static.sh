@@ -17,10 +17,9 @@ if [ -e /data/web_static/current ]
 then
 	sudo rm -rf /data/web_static/current
 fi
-sudo ln -s /data/web_static/releases/test /data/web_static/current
 
 sudo chown -R "$USER":"$USER" /data/
-
+sudo ln -s /data/web_static/releases/test /data/web_static/current
 sudo tee /etc/nginx/sites-enabled/default > /dev/null << EOT
 
 server {
