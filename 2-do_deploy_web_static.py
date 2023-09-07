@@ -42,7 +42,7 @@ def do_deploy(archive_path):
         return False
     try:
         file_name = archive_path.split('/')[-1]
-        file_name_no_ext = file_name.split('.')[-2]
+        file_name_no_ext = file_name.split('.')[0]
         old_path = '/data/web_static/releases/{}/web_static'.format(
                 file_name_no_ext)
         new_path = '/data/web_static/releases/{}'.format(
@@ -53,9 +53,7 @@ def do_deploy(archive_path):
         api.run(f'mkdir -p {new_path}')
         api.run(f'tar -zxf /tmp/{file_name} -C {new_path}')
         api.run(f'rm /tmp/{file_name}')
-        api.run(f'rm -rf {curr_path}')
-        api.run(f'mv {old_path}/* {new_path}')
-        api.run(f'rm -rf {old_path}')
+        api.run(f'rm -rfR {curr_path}')
         api.run(f'ln -s {new_path} {curr_path}')
         return True
     except Exception:
