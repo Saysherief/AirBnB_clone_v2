@@ -7,6 +7,8 @@ This module contain
             web_static to  version folder
     do_deploy: that takes a parameter 'archive_path' which is the
             location of the archive file
+    deploy: that dynamically call do_pack and then deploy the archive
+            as required
 """
 import os
 import fabric.api as api
@@ -58,3 +60,13 @@ def do_deploy(archive_path):
         return True
     except Exception:
         return False
+
+
+def deploy():
+    """ Deploy the the archive dynamically
+    """
+    archive_path = do_pack()
+    if archive_path is None:
+        return False
+    result = do_deploy(archive_path)
+    return result

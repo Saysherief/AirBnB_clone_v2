@@ -24,6 +24,6 @@ def do_pack():
             now.hour, now.minute, now.second)
     try:
         api.local(f"tar -zcvf {file_name.absolute()} -C web_static .")
-        return file_name.absolute()
+        return str(file_name.absolute())
     except Exception:
         return None
