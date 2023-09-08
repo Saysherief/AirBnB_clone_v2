@@ -49,6 +49,14 @@ def do_deploy(archive_path):
                 file_name_no_ext)
         curr_path = '/data/web_static/current'
 
+        run_locally = os.getenv("run_locally", None)
+        if run_locally is None:
+            api.local(f'mkdir -p {new_path}')
+            api.local(f'tar -zxf {archive_path} -C {new_path}')
+            api.local(f'rm -rfR {curr_path}')
+            api.local(f'ln -s {new_path} {curr_path}')
+            os.environ['run_locally'] = "True"
+
         api.put(archive_path, '/tmp/')
         api.run(f'mkdir -p {new_path}')
         api.run(f'tar -zxf /tmp/{file_name} -C {new_path}')
